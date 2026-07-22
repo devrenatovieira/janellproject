@@ -39,9 +39,7 @@ CNAME  janellproject  →  cname.vercel-dns.com
 
 ### 2) Projeto API (Hobby: 1 serverless function só)
 
-**Opção A (recomendada):** Root Directory = `api`  
-**Opção B:** Root Directory vazio — o `vercel.json` na raiz do monorepo força **só 1** function (`api/api/index.ts`).
-
+- **Root Directory: `api`** (obrigatório)
 - Framework Preset: **Other**
 - Build Command: **vazio**
 - Env:

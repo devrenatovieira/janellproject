@@ -11,15 +11,16 @@ PostgreSQL (Neon) → API NestJS (Vercel) → Web Next.js (Vercel)
 | Projeto | Root Directory | Framework |
 |---------|----------------|-----------|
 | **Web** | `web` | Next.js |
-| **API** | `api` **ou vazio** | Other |
+| **API** | **`api`** (obrigatório) | Other |
 
 ### Por que “No more than 12 Serverless Functions”?
 
 Com Root Directory **vazio**, a Vercel trata `api/**/*.ts` do monorepo como **uma function cada** (~24). Hobby = máx. 12.
 
-**Correção neste repo:**
-- `vercel.json` na **raiz** do monorepo com `builds` apontando **só** para `api/api/index.ts` (1 function).
-- `api/vercel.json` com o mesmo padrão se Root Directory = `api`.
+**Correção:**
+- Projeto API com Root Directory = **`api`** e `api/vercel.json` (1 function Nest).
+- Projeto Web com Root Directory = **`web`** e `web/vercel.json` (Next.js).
+- **Não** use Root Directory vazio na raiz do monorepo.
 
 ### Checklist API
 

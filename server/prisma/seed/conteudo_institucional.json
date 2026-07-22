@@ -1,0 +1,361 @@
+{
+  "meta": {
+    "source": "https://www.larbatistamanaus.org/",
+    "crawled_at": "2026-07-22",
+    "organization": "Lar Batista Janell Doyle",
+    "note": "Conteúdo 100% extraído do site oficial. Campos null ou com flag placeholder NÃO são oficiais."
+  },
+  "identity": {
+    "legal_name": "Lar Batista Janell Doyle",
+    "short_name": "Janell Doyle",
+    "type": "Organização da Sociedade Civil - OSC, de natureza beneficente, sem fins lucrativos",
+    "affiliation": "Convenção Batista do Amazonas (CBA) — Órgão de Ação Social da CBA",
+    "founded_at": "1996-10-12",
+    "founded_display": "12 de Outubro de 1996",
+    "years_of_service_display": "Há 30 anos servindo com Excelência!",
+    "community": "Mauazinho",
+    "city": "Manaus",
+    "state": "AM",
+    "country": "Brasil",
+    "cnpj": "63692354000164",
+    "cnpj_formatted": "63.692.354/0001-64",
+    "director": {
+      "name": "Magaly Araújo",
+      "role": "Diretora",
+      "source_page": "/nossa-historia"
+    }
+  },
+  "about": {
+    "summary": "O Lar Batista Janell Doyle é uma Organização da Sociedade Civil - OSC, de natureza beneficente, sem fins lucrativos, que atua como Acolhimento Institucional e Familiar para crianças e adolescentes, como também Serviço de Convivência e Fortalecimento de Vínculos para as famílias da comunidade do Mauazinho e Abordagem Social que identifica indivíduos em situação de risco pessoal e social em espaços públicos. Filiada a Convenção Batista do Amazonas. Inaugurada em 12 de Outubro de 1996.",
+    "home_intro": "Há 30 anos servindo com Excelência! Assegurar os direitos das crianças, adolescentes, jovens, adultos e idosos é a nossa missão! Desde 1996, por meio de serviços e projetos sociais, educação, acolhimento, abordagem social e fortalecimento de vínculos, promovemos dignidade, esperança e oportunidades para transformar vidas. Junte-se a nós nessa missão!",
+    "how_we_live": "Nosso sustento vem através de fomentos, emendas, e sobretudo de doações de pessoas sensíveis às nossas necessidades, que se tornam padrinhos financeiros das crianças.",
+    "mission": "Assistir integral ou parcialmente crianças, adolescentes, jovens e adultos em situação de vulnerabilidade e risco, assim como seus familiares, produzindo segurança social, suprindo-lhes as necessidades básicas nas áreas: física, emocional, social, educacional e espiritual.",
+    "vision": "Ser reconhecido como Organização da Sociedade Civil de referência em qualidade de atendimento e acolhimento.",
+    "values": [
+      "Amor",
+      "Dedicação",
+      "Fé",
+      "Respeito",
+      "Amizade",
+      "Trabalho",
+      "Ética",
+      "Esperança",
+      "Família"
+    ]
+  },
+  "history": {
+    "author": "Magaly Araújo",
+    "author_role": "Diretora",
+    "full_text": "O Lar Batista foi gerado em nosso coração como um sonho! Enquanto Presidente da União Feminina Missionária Batista do Amazonas, no ano de 1989, socializamos o sonho e logo foi acolhido por todas as mulheres batistas. Ganhamos o terreno e com a ajuda de todos construímos o prédio.\n\nInauguramos em 12 de Outubro de 1996 com uma criança. O lar foi crescendo e em dois meses já eram 30 crianças. Logo depois o Lar passou da UFMBAM para a Convenção Batista do Amazonas (CBA) e foi oficializado Órgão de Ação Social da CBA. O Lar trabalhava com o Programa Abrigo até o ano de 2001, quando iniciou o Programa Sócio-Familiar com atendimentos às crianças da comunidade.\n\nTemos experimentado ao longo desses anos o quanto Deus supre as necessidades dos pequeninos. Todas as pessoas, que sensíveis às necessidades de nossas crianças estendem suas mãos e nos ajudam, são enviadas por Deus.\n\nSomos gratos a cada um que tem tornado possível o Lar por todos estes anos de serviços prestados a nossa cidade e estado, no cuidado de crianças e adolescentes\n\nA Deus toda honra e louvores que só a Ele é devido!",
+    "timeline": [
+      {
+        "year": 1989,
+        "event": "Sonho socializado por Magaly Araújo como Presidente da União Feminina Missionária Batista do Amazonas (UFMBAM); acolhido pelas mulheres batistas; terreno e construção do prédio."
+      },
+      {
+        "year": 1996,
+        "date": "1996-10-12",
+        "event": "Inauguração com uma criança; em dois meses, 30 crianças. Transferência da UFMBAM para a CBA e oficialização como Órgão de Ação Social da CBA."
+      },
+      {
+        "year": 2001,
+        "event": "Início do Programa Sócio-Familiar com atendimentos às crianças da comunidade (além do Programa Abrigo)."
+      }
+    ]
+  },
+  "services": [
+    {
+      "slug": "servico-de-convivencia",
+      "name": "Serviço de Convivência",
+      "also_known_as": ["Fábrica de Sonhos", "SCFV"],
+      "home_description": "Atendimento para famílias vulneráveis da comunidade, fortalecendo vínculos através de atividades socioeducativas.",
+      "about_description": "As famílias recebem atendimento psicossocial, elaboram um projeto de vida e são atendidas dentro de suas necessidades e possibilidades da rede de atendimentos.",
+      "detail_page_url": null,
+      "cta_url": "/sobre"
+    },
+    {
+      "slug": "abordagem-social",
+      "name": "Abordagem Social",
+      "also_known_as": ["REAME", "Abordagem Social - REAME"],
+      "home_description": "Ações de cidadania para pessoas em situação de rua e enfrentamento ao trabalho infantil e exploração sexual de crianças e adolescentes.",
+      "about_description": "Ações direcionadas aos sobreviventes e moradia de rua com objetivo de estabelecer vínculos de confiança para ingressarem na rede de proteção e promoção da reinserção familiar.",
+      "detail_page_url": null,
+      "cta_url": "/sobre"
+    },
+    {
+      "slug": "abrigo-institucional",
+      "name": "Abrigo de Famílias",
+      "also_known_as": ["Abrigo Institucional", "Acolhimento Institucional"],
+      "home_description": "Abrigo temporário para mães com filhos em situação de vulnerabilidade, com oferta de cuidado integral e oportunidade para reescreverem suas histórias.",
+      "about_description": "Casa de acolhida para crianças e adolescentes com suas mães, vítimas das mais diversas formas de violência, com capacidade para 20 acolhidos.",
+      "capacity": 20,
+      "detail_page_url": null,
+      "cta_url": "/sobre"
+    },
+    {
+      "slug": "familia-acolhedora",
+      "name": "Família Acolhedora",
+      "also_known_as": ["Acolhimento Familiar", "Serviço Família Acolhedora"],
+      "home_description": "Crianças e adolescentes são acolhidas em casas de Famílias Acolhedoras temporariamente, até o retorno seguro para a família de origem ou adoção.",
+      "about_description": "Capacitação de famílias para o acolhimento de crianças e adolescentes de forma provisória, oferecendo melhores condições emocionais e de desenvolvimento para o acolhido.",
+      "detail_page_url": "/familia-acolhedora",
+      "tagline": "Muitas vezes, basta ser: colo que acolhe!",
+      "full_description": "O Serviço Família Acolhedora é uma medida protetiva, temporária e excepcional, prevista no Estatuto da Criança e do Adolescente (ECA), que visa acolher crianças e adolescentes em situação de risco social, em uma Família Acolhedora, previamente selecionada, cadastrada e capacitada.\n\nPor um período determinado, essas crianças, adolescentes ou grupos de irmãos acolhidos em Família Acolhedora, receberão amparo, amor e a possibilidade de convivência familiar e comunitária. O Acolhimento Familiar é a alternativa mais humanizada, sendo fundamental para o desenvolvimento do acolhido.\n\nO objetivo prioritário do acolhimento é o preparo no retorno da criança e adolescente à família biológica (que podem ser os pais, irmãos ou parentes próximos) ou encaminhamento para uma família substituta, que esteja devidamente habilitada e inscrita no Cadastro Nacional de Adoção.\n\nAs Famílias Acolhedoras são selecionadas, capacitadas e acompanhadas pela equipe técnica do Serviço de Acolhimento.",
+      "eligibility_criteria": [
+        "Residir há pelo menos 2 (dois) anos no município onde se dará a oferta do serviço, ou seja, em Manaus/Am",
+        "Possuir idade mínima de 21 anos, sem restrição de gênero ou estado civil",
+        "Ter condições de saúde física e mental para oferecer cuidado ao próximo",
+        "Possuir convivência familiar estável e livre de pessoas dependentes de substâncias entorpecentes",
+        "Não ter antecedentes criminais",
+        "Residir em imóvel com condições adequadas da moradia (espaços seguros e higiene do ambiente)",
+        "Aceitação e comprometimento com a metodologia do Serviço",
+        "Não ter interesse em adoção"
+      ],
+      "required_documents": [
+        "RG",
+        "CPF",
+        "Comprovante de residência",
+        "Comprovante de rendimentos",
+        "Certidão negativa de antecedentes criminais",
+        "Atestado de saúde física e mental"
+      ]
+    }
+  ],
+  "adoption": {
+    "page_url": "/adocao",
+    "who_can_be_adopted": [
+      "Crianças ou adolescentes com, no máximo, 18 anos de idade à data do pedido de adoção e independentemente da situação jurídica",
+      "Pessoa maior de 18 anos que já estivesse sob a guarda ou tutela dos adotantes",
+      "Maiores de 18 anos, nos termos do Código Civil"
+    ],
+    "step_by_step": {
+      "status": "partial_extraction",
+      "note": "Seção 'Passo a Passo' existe no site; detalhamento textual completo não foi extraído do HTML (possível conteúdo em imagem). PLACEHOLDER até validação institucional.",
+      "steps": []
+    }
+  },
+  "contact": {
+    "address_street": "Rua Igarapé de Mauá, N 01 - Mauazinho",
+    "city": "Manaus",
+    "state": "AM",
+    "postal_code": "69075-291",
+    "full_address": "Rua Igarapé de Mauá, N 01 - Mauazinho, Manaus, AM 69075-291",
+    "email": "contato@larbatistamanaus.org.br",
+    "whatsapp_display": "(92) 99494-7475",
+    "whatsapp_e164": "5592994947475",
+    "whatsapp_url": "https://api.whatsapp.com/send?phone=5592994947475&text=Ol%C3%A1.%20Quero%20saber%20mais%20sobre%20o%20Janell%20Doyle!",
+    "website": "https://www.larbatistamanaus.org",
+    "social": {
+      "instagram": "https://instagram.com/abrigojanelldoyle",
+      "facebook": "https://www.facebook.com/abrigojanelldoyle",
+      "youtube": "https://www.youtube.com/watch?v=VdCOinmfVQo&t=39s"
+    }
+  },
+  "donations": {
+    "page_url": "/doacao",
+    "headline": "Doe pelo PIX!",
+    "instructions": "Abra o aplicativo do banco e capture o Qr Code!",
+    "accounts": [
+      {
+        "agency": "1208-4",
+        "account": "67368-4",
+        "account_type": "conta corrente",
+        "pix_key_type": "CNPJ",
+        "pix_key": "63692354000164",
+        "bank_name": null,
+        "bank_name_note": "Nome do banco não publicado em texto no site oficial — confirmar com a instituição (não inventar)."
+      },
+      {
+        "agency": "1999",
+        "account": "25467-3",
+        "account_type": "conta corrente",
+        "pix_key_type": "email",
+        "pix_key": "contato@larbatistamanaus.org.br",
+        "bank_name": null,
+        "bank_name_note": "Nome do banco não publicado em texto no site oficial — confirmar com a instituição (não inventar)."
+      }
+    ],
+    "external_partner_url": "https://larbatistajanelldoyle.paradoar.org/",
+    "external_partner_label": "Seja um parceiro!",
+    "godparent_cta": "Seja um Padrinho!",
+    "godparent_channel": "whatsapp"
+  },
+  "statistics_official": [
+    {
+      "key": "years_of_service",
+      "label": "Anos de serviço",
+      "value": 30,
+      "display": "30 anos",
+      "source": "home"
+    },
+    {
+      "key": "shelter_capacity",
+      "label": "Capacidade do abrigo institucional",
+      "value": 20,
+      "display": "20 acolhidos",
+      "source": "sobre"
+    },
+    {
+      "key": "founded_year",
+      "label": "Ano de inauguração",
+      "value": 1996,
+      "display": "Desde 1996",
+      "source": "sobre/nossa-historia"
+    }
+  ],
+  "statistics_placeholder": [
+    {
+      "key": "monthly_attendances",
+      "label": "Atendimentos/mês",
+      "value": null,
+      "placeholder": true,
+      "note": "Não publicado no site atual"
+    },
+    {
+      "key": "active_projects",
+      "label": "Projetos ativos",
+      "value": null,
+      "placeholder": true
+    },
+    {
+      "key": "families_welcomed",
+      "label": "Famílias acolhidas",
+      "value": null,
+      "placeholder": true
+    },
+    {
+      "key": "volunteers",
+      "label": "Voluntários",
+      "value": null,
+      "placeholder": true
+    },
+    {
+      "key": "partners",
+      "label": "Parceiros",
+      "value": null,
+      "placeholder": true
+    }
+  ],
+  "videos": [
+    {
+      "youtube_id": "Nsf5R6NXgSU",
+      "title_hint": "Realizações / institucional 2023"
+    },
+    {
+      "youtube_id": "I6m9IT3e71k",
+      "title_hint": "Ano de 2022"
+    },
+    {
+      "youtube_id": "87a0BE6hfmA",
+      "title_hint": "Programa Aproximar Muda Tudo - AmazonSat"
+    },
+    {
+      "youtube_id": "cgXsmhEgF8Y",
+      "title_hint": "Nossa História - Parte 01 - AmazonSat 13/11/2013"
+    },
+    {
+      "youtube_id": "tpYpAZf9IMc",
+      "title_hint": "Nossa História - Parte 02 - AmazonSat 13/11/2013"
+    },
+    {
+      "youtube_id": "CvGErvRaBWc",
+      "title_hint": "Como ajudar - 13/11/2013"
+    },
+    {
+      "youtube_id": "VdCOinmfVQo",
+      "title_hint": "YouTube institucional (link redes)"
+    }
+  ],
+  "partners": [
+    { "url": "https://convencaobatistaam.org/", "name": "Convenção Batista do Amazonas" },
+    { "url": "http://www.pibmanaus.org.br/", "name": "PIB Manaus" },
+    { "url": "http://www.ibconstantinopolis.com.br/", "name": "IB Constantinópolis" },
+    { "url": "http://www.ibjapiim.com/", "name": "IB Japiim" },
+    { "url": "https://www.instagram.com/igrejabmemauel/", "name": "Igreja Batista Memorial Emanuel" },
+    { "url": "http://www.cmviva.org/site/", "name": "CM Viva" },
+    { "url": "https://www.instagram.com/mircentrosul/", "name": "MIR Centro Sul" },
+    { "url": "http://www.santarosapan.com.br/", "name": "Santa Rosa Pan" },
+    { "url": "https://www.amazoniapolpas.com.br/", "name": "Amazônia Polpas" },
+    { "url": "http://www.amazongas.com.br/amazongas/", "name": "Amazon Gás" },
+    { "url": "http://www.alfatecbr.com.br/", "name": "Alfatec" },
+    { "url": "https://www.ddwcolor.com/pt/home-pt/", "name": "DDW Color" },
+    { "url": "http://www.cvtransportes.com.br/", "name": "CV Transportes" },
+    { "url": "https://www.instagram.com/kbvaco/", "name": "KB Vaco" },
+    { "url": "https://ceiconsultoria.com/", "name": "CEI Consultoria" },
+    { "url": "http://www.norteclean.com.br/", "name": "Norte Clean" },
+    { "url": "http://www.seas.am.gov.br/", "name": "SEAS-AM" },
+    { "url": "https://semasc.manaus.am.gov.br/", "name": "SEMASC Manaus" },
+    { "url": "http://www.seas.am.gov.br/tag/fps/", "name": "FPS / SEAS" },
+    { "url": "https://manaussolidaria.manaus.am.gov.br/", "name": "Manaus Solidária" },
+    { "url": "https://semsa.manaus.am.gov.br/", "name": "SEMSA Manaus" },
+    { "url": "https://www2.sesc.com.br/portal/site/mesabrasilsesc/home/", "name": "SESC Mesa Brasil" }
+  ],
+  "transparency": {
+    "index_url": "/portaldatransparencia",
+    "years": [
+      { "year": 2017, "url": "/transparencia2017" },
+      { "year": 2018, "url": "/transparencia2018" },
+      { "year": 2019, "url": "/transparencia2019" },
+      { "year": 2020, "url": "/transparencia2020" },
+      { "year": 2021, "url": "/transparencia2021" },
+      { "year": 2022, "url": "/transparencia2022" },
+      { "year": 2023, "url": "/transparencia2023" },
+      { "year": 2024, "url": "/transparencia2024" },
+      { "year": 2025, "url": "/2025" },
+      { "year": 2026, "url": "/2026" }
+    ],
+    "activity_reports_url": "/relatoriodeatividades",
+    "activity_report_years": [2022, 2023, 2024, 2025],
+    "annual_balance_url": "/balancoanual",
+    "annual_balance_years": [2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024],
+    "document_types": [
+      "Plano de Trabalho",
+      "Termo de Fomento",
+      "Nota de Empenho",
+      "Diário Oficial",
+      "Termo Aditivo",
+      "Termo de Apostilamento",
+      "Prestação de Contas",
+      "Alvará Judicial",
+      "Termo de Responsabilidade",
+      "Emenda Parlamentar",
+      "Relatório de Atividades",
+      "Balanço Anual"
+    ]
+  },
+  "navigation": [
+    { "label": "Início", "url": "/" },
+    { "label": "Quem Somos", "url": "/sobre" },
+    { "label": "Nossa História", "url": "/nossa-historia" },
+    { "label": "Vídeos", "url": "/videos" },
+    { "label": "Contato", "url": "/contato" },
+    { "label": "Família Acolhedora", "url": "/familia-acolhedora" },
+    { "label": "Adoção", "url": "/adocao" },
+    { "label": "Doação", "url": "/doacao" },
+    { "label": "Portal da Transparência", "url": "/portaldatransparencia" }
+  ],
+  "pages_crawled": [
+    "/",
+    "/sobre",
+    "/nossa-historia",
+    "/familia-acolhedora",
+    "/adocao",
+    "/doacao",
+    "/contato",
+    "/videos",
+    "/portaldatransparencia",
+    "/inquiry-services-page",
+    "/transparencia2017",
+    "/transparencia2018",
+    "/transparencia2019",
+    "/transparencia2020",
+    "/transparencia2021",
+    "/transparencia2022",
+    "/transparencia2023",
+    "/transparencia2024",
+    "/2025",
+    "/2026",
+    "/relatoriodeatividades",
+    "/balancoanual"
+  ]
+}

@@ -6,6 +6,32 @@
 PostgreSQL (Neon) → API NestJS (Vercel) → Web Next.js (Vercel)
 ```
 
+## Crítico: 2 projetos Vercel (não 1 monorepo)
+
+O Hobby plan permite **no máximo 12 Serverless Functions por deployment**.
+
+| Projeto | Root Directory | Framework |
+|---------|----------------|-----------|
+| **Web** | `web` | Next.js |
+| **API** | `api` | **Other** (não Next.js) |
+
+### Por que o erro "No more than 12 Serverless Functions"?
+
+Se o Root Directory do projeto **API** ficar vazio (raiz do monorepo), a Vercel trata a pasta `api/` inteira como o diretório especial de functions e cria **1 function por arquivo `.ts`** (~24) — estoura o limite do Hobby.
+
+Com Root Directory = `api`, só existe **1** function: `api/index.ts` (NestJS inteiro atrás dela), via `vercel.json` → `builds`.
+
+### Checklist do projeto API na Vercel
+
+1. Settings → General → **Root Directory** = `api` → Save
+2. Framework Preset = **Other**
+3. Build Command = **deixar vazio** (o `vercel.json` usa `@vercel/node` em `api/index.ts`)
+4. Output Directory = vazio
+5. Install Command = (automático do vercel.json) ou `npm install && npx prisma generate`
+6. Redeploy **sem cache** (Deployments → ⋮ → Redeploy → uncheck "Use existing Build Cache")
+
+No log bom, você deve ver **uma** linha `Using TypeScript` (não 20+).
+
 ## DNS
 
 | Tipo | Nome | Valor |
@@ -24,20 +50,23 @@ PostgreSQL (Neon) → API NestJS (Vercel) → Web Next.js (Vercel)
 
 | Variável | Valor |
 |----------|--------|
-| DATABASE_URL | postgresql://... |
+| DATABASE_URL | postgresql://... (Neon) |
 | JWT_ACCESS_SECRET | (aleatório 32+) |
 | JWT_REFRESH_SECRET | (aleatório 32+) |
 | CORS_ORIGINS | https://janellproject.cartergroup.com.br |
+| SEED_ADMIN_EMAIL | admin@larbatistamanaus.org.br |
 | SEED_ADMIN_PASSWORD | Teste@123 |
 
-## Build commands sugeridos (Vercel)
+## Banco (após API no ar)
 
-### web
-- Install: `npm ci`
-- Build: `npm run build`
-- Output: default Next.js
+```bash
+cd api
+npx prisma migrate deploy
+npx prisma db seed
+```
 
-### api
-- Install: `npm ci && npx prisma generate`
-- Build: `npm run build`
-- Entry: `api/index.ts` (vercel.json)
+Admin seed: `admin@larbatistamanaus.org.br` / `Teste@123`
+
+## Domínio
+
+Adicionar `janellproject.cartergroup.com.br` no projeto **web** e criar o CNAME no DNS.

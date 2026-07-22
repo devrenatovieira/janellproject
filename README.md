@@ -38,9 +38,12 @@ CNAME  janellproject  →  cname.vercel-dns.com
   - `API_PROXY_ORIGIN` = URL do projeto da API (ex: `https://janellproject-api.vercel.app`)
 
 ### 2) Projeto API (Hobby: 1 serverless function só)
-- **Root Directory: `api`** (obrigatório — se vazio, a Vercel cria 1 function por `.ts` e estoura o limite de 12)
+
+**Opção A (recomendada):** Root Directory = `api`  
+**Opção B:** Root Directory vazio — o `vercel.json` na raiz do monorepo força **só 1** function (`api/api/index.ts`).
+
 - Framework Preset: **Other**
-- Build Command: **vazio** (usa `vercel.json` → `api/index.ts`)
+- Build Command: **vazio**
 - Env:
   - `DATABASE_URL` = connection string Neon/Postgres
   - `JWT_ACCESS_SECRET` = string longa aleatória
@@ -49,7 +52,8 @@ CNAME  janellproject  →  cname.vercel-dns.com
   - `SEED_ADMIN_EMAIL` = `admin@larbatistamanaus.org.br`
   - `SEED_ADMIN_PASSWORD` = `Teste@123`
 
-Se o log mostrar dezenas de linhas `Using TypeScript` e falhar com *No more than 12 Serverless Functions*, o Root Directory está errado.
+**Log bom:** só **1** linha `Using TypeScript`.  
+**Log ruim (20+ TypeScript + erro de 12 functions):** zero-config está pegando todos os `.ts` — faça redeploy sem cache após este commit.
 
 ### 3) Banco
 ```bash

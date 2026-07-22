@@ -8,6 +8,13 @@ import { site } from "@/content/site";
 import { brand } from "@/content/media";
 import "./globals.css";
 
+/**
+ * Hobby plan Vercel: max 12 Serverless Functions.
+ * Force static HTML for all pages (admin is client-side anyway).
+ */
+export const dynamic = "force-static";
+export const revalidate = 60;
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],

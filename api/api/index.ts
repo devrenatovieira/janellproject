@@ -1,6 +1,6 @@
 /**
- * Vercel serverless entry for NestJS.
- * Routes: /api/v1/*
+ * ÚNICA Serverless Function da API (Vercel Hobby = máx. 12).
+ * Todo o NestJS sobe por este handler.
  */
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { NestFactory } from '@nestjs/core';
@@ -10,7 +10,6 @@ import express, { type Request, type Response } from 'express';
 import { AppModule } from '../src/app.module';
 
 const expressApp = express();
-// Body parser for Vercel serverless
 expressApp.use(express.json({ limit: '2mb' }));
 expressApp.use(express.urlencoded({ extended: true }));
 

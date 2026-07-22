@@ -13,9 +13,11 @@ export async function apiGet<T>(
   init?: RequestInit,
 ): Promise<T | null> {
   try {
+    // force-cache keeps pages static on Vercel Hobby (avoids 1 function per route)
     const res = await fetch(`${API_URL}${path}`, {
       ...init,
-      next: { revalidate: 30 },
+      cache: "force-cache",
+      next: { revalidate: 60 },
       headers: {
         Accept: "application/json",
         ...(init?.headers ?? {}),

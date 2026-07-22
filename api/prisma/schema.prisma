@@ -1,0 +1,936 @@
+// Lar Batista Janell Doyle — Prisma Schema (FASE 2 referência)
+// PostgreSQL + UUID + soft delete seletivo
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─────────────────────────────────────────────
+// Enums
+// ─────────────────────────────────────────────
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  PENDING
+  BLOCKED
+}
+
+enum PostStatus {
+  DRAFT
+  SCHEDULED
+  PUBLISHED
+  ARCHIVED
+}
+
+enum DonationType {
+  ONE_TIME
+  RECURRING
+}
+
+enum DonationStatus {
+  PENDING
+  PAID
+  FAILED
+  EXPIRED
+  REFUNDED
+  CANCELLED
+}
+
+enum PaymentProvider {
+  PIX
+  MERCADO_PAGO
+  STRIPE
+  MANUAL
+}
+
+enum TransparencyDocType {
+  PLANO_TRABALHO
+  TERMO_FOMENTO
+  NOTA_EMPENHO
+  DIARIO_OFICIAL
+  TERMO_ADITIVO
+  TERMO_APOSTILAMENTO
+  PRESTACAO_CONTAS
+  ALVARA_JUDICIAL
+  TERMO_RESPONSABILIDADE
+  EMENDA_PARLAMENTAR
+  RELATORIO_ATIVIDADES
+  BALANCO_ANUAL
+  OUTRO
+}
+
+enum ApplicationStatus {
+  SUBMITTED
+  UNDER_REVIEW
+  APPROVED
+  REJECTED
+  WAITLIST
+  WITHDRAWN
+}
+
+enum MediaVisibility {
+  PUBLIC
+  PRIVATE
+}
+
+enum MediaType {
+  IMAGE
+  VIDEO
+  DOCUMENT
+  AUDIO
+  OTHER
+}
+
+enum StatSource {
+  OFFICIAL
+  PLACEHOLDER
+}
+
+enum NotificationChannel {
+  EMAIL
+  IN_APP
+  WHATSAPP
+}
+
+enum NotificationStatus {
+  PENDING
+  SENT
+  FAILED
+  READ
+}
+
+enum CampaignStatus {
+  DRAFT
+  ACTIVE
+  PAUSED
+  ENDED
+}
+
+enum ContentSource {
+  OFFICIAL
+  CMS
+  PLACEHOLDER
+}
+
+// ─────────────────────────────────────────────
+// Identity & Access
+// ─────────────────────────────────────────────
+
+model User {
+  id           String     @id @default(uuid()) @db.Uuid
+  email        String     @unique
+  passwordHash String
+  name         String
+  phone        String?
+  document     String? // CPF opcional
+  status       UserStatus @default(PENDING)
+  emailVerifiedAt DateTime?
+  lastLoginAt  DateTime?
+  avatarMediaId String?   @db.Uuid
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  deletedAt    DateTime?
+
+  avatar          MediaAsset?      @relation("UserAvatar", fields: [avatarMediaId], references: [id])
+  roles           UserRole[]
+  refreshTokens   RefreshToken[]
+  donations       Donation[]       @relation("DonorUser")
+  receipts        Receipt[]
+  notifications   Notification[]
+  auditLogs       AuditLog[]
+  postsAuthored   Post[]           @relation("PostAuthor")
+  volunteerProfile VolunteerApplication?
+  messagesHandled ContactMessage[] @relation("HandledBy")
+
+  @@index([status])
+  @@index([deletedAt])
+  @@map("users")
+}
+
+model Role {
+  id          String   @id @default(uuid()) @db.Uuid
+  name        String   @unique // SUPER_ADMIN, ADMIN, EDITOR...
+  description String?
+  isSystem    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  users       UserRole[]
+  permissions RolePermission[]
+
+  @@map("roles")
+}
+
+model Permission {
+  id          String   @id @default(uuid()) @db.Uuid
+  code        String   @unique // resource:action
+  description String?
+  createdAt   DateTime @default(now())
+
+  roles RolePermission[]
+
+  @@map("permissions")
+}
+
+model RolePermission {
+  roleId       String @db.Uuid
+  permissionId String @db.Uuid
+
+  role       Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@id([roleId, permissionId])
+  @@map("role_permissions")
+}
+
+model UserRole {
+  userId String @db.Uuid
+  roleId String @db.Uuid
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role Role @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@id([userId, roleId])
+  @@map("user_roles")
+}
+
+model RefreshToken {
+  id        String    @id @default(uuid()) @db.Uuid
+  userId    String    @db.Uuid
+  tokenHash String    @unique
+  familyId  String    @db.Uuid
+  userAgent String?
+  ip        String?
+  expiresAt DateTime
+  revokedAt DateTime?
+  createdAt DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([familyId])
+  @@index([expiresAt])
+  @@map("refresh_tokens")
+}
+
+model AuditLog {
+  id         String   @id @default(uuid()) @db.Uuid
+  actorId    String?  @db.Uuid
+  action     String
+  resource   String
+  resourceId String?
+  ip         String?
+  userAgent  String?
+  metadata   Json?
+  createdAt  DateTime @default(now())
+
+  actor User? @relation(fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@index([actorId])
+  @@index([resource, resourceId])
+  @@index([createdAt])
+  @@map("audit_logs")
+}
+
+// ─────────────────────────────────────────────
+// Site settings & pages
+// ─────────────────────────────────────────────
+
+model SiteSetting {
+  id        String   @id @default(uuid()) @db.Uuid
+  key       String   @unique
+  value     Json
+  isPublic  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("site_settings")
+}
+
+model Page {
+  id              String        @id @default(uuid()) @db.Uuid
+  slug            String
+  locale          String        @default("pt-BR")
+  title           String
+  excerpt         String?
+  bodyMd          String        @db.Text
+  bodyHtml        String?       @db.Text
+  coverMediaId    String?       @db.Uuid
+  seoTitle        String?
+  seoDescription  String?
+  source          ContentSource @default(CMS)
+  publishedAt     DateTime?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  deletedAt       DateTime?
+
+  cover MediaAsset? @relation(fields: [coverMediaId], references: [id])
+
+  @@unique([slug, locale])
+  @@index([publishedAt])
+  @@map("pages")
+}
+
+// ─────────────────────────────────────────────
+// Services, projects, partners, team, stats
+// ─────────────────────────────────────────────
+
+model Service {
+  id               String        @id @default(uuid()) @db.Uuid
+  slug             String        @unique
+  name             String
+  alsoKnownAs      String[]      @default([])
+  shortDescription String
+  aboutDescription String        @db.Text
+  fullDescription  String?       @db.Text
+  tagline          String?
+  capacity         Int?
+  coverMediaId     String?       @db.Uuid
+  iconMediaId      String?       @db.Uuid
+  eligibility      String[]      @default([])
+  requiredDocuments String[]     @default([])
+  objectives       String[]      @default([])
+  howItWorks       String[]      @default([])
+  sortOrder        Int           @default(0)
+  isPublished      Boolean       @default(true)
+  source           ContentSource @default(OFFICIAL)
+  seoTitle         String?
+  seoDescription   String?
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  deletedAt        DateTime?
+
+  cover   MediaAsset?  @relation("ServiceCover", fields: [coverMediaId], references: [id])
+  icon    MediaAsset?  @relation("ServiceIcon", fields: [iconMediaId], references: [id])
+  faqs    ServiceFaq[]
+  docs    TransparencyDocument[]
+  gallery ServiceMedia[]
+
+  @@index([isPublished, sortOrder])
+  @@map("services")
+}
+
+model ServiceFaq {
+  id        String   @id @default(uuid()) @db.Uuid
+  serviceId String   @db.Uuid
+  question  String
+  answer    String   @db.Text
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  service Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+
+  @@index([serviceId])
+  @@map("service_faqs")
+}
+
+model ServiceMedia {
+  serviceId String @db.Uuid
+  mediaId   String @db.Uuid
+  sortOrder Int    @default(0)
+
+  service Service    @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  media   MediaAsset @relation(fields: [mediaId], references: [id], onDelete: Cascade)
+
+  @@id([serviceId, mediaId])
+  @@map("service_media")
+}
+
+model Project {
+  id             String    @id @default(uuid()) @db.Uuid
+  slug           String    @unique
+  title          String
+  summary        String
+  bodyMd         String?   @db.Text
+  coverMediaId   String?   @db.Uuid
+  isPublished    Boolean   @default(false)
+  startsAt       DateTime?
+  endsAt         DateTime?
+  sortOrder      Int       @default(0)
+  seoTitle       String?
+  seoDescription String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  deletedAt      DateTime?
+
+  cover MediaAsset? @relation(fields: [coverMediaId], references: [id])
+
+  @@index([isPublished])
+  @@map("projects")
+}
+
+model Partner {
+  id        String   @id @default(uuid()) @db.Uuid
+  name      String
+  url       String?
+  logoMediaId String? @db.Uuid
+  sortOrder Int      @default(0)
+  isPublished Boolean @default(true)
+  source    ContentSource @default(OFFICIAL)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deletedAt DateTime?
+
+  logo MediaAsset? @relation(fields: [logoMediaId], references: [id])
+
+  @@index([isPublished, sortOrder])
+  @@map("partners")
+}
+
+model TeamMember {
+  id        String   @id @default(uuid()) @db.Uuid
+  name      String
+  roleTitle String
+  bio       String?  @db.Text
+  photoMediaId String? @db.Uuid
+  sortOrder Int      @default(0)
+  isPublished Boolean @default(true)
+  source    ContentSource @default(CMS)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deletedAt DateTime?
+
+  photo MediaAsset? @relation(fields: [photoMediaId], references: [id])
+
+  @@map("team_members")
+}
+
+model Stat {
+  id          String     @id @default(uuid()) @db.Uuid
+  key         String     @unique
+  label       String
+  value       Decimal?   @db.Decimal(18, 2)
+  display     String?
+  suffix      String?
+  prefix      String?
+  source      StatSource @default(PLACEHOLDER)
+  sortOrder   Int        @default(0)
+  isPublished Boolean    @default(true)
+  notes       String?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  @@map("stats")
+}
+
+model Testimonial {
+  id          String    @id @default(uuid()) @db.Uuid
+  authorName  String
+  authorRole  String?
+  content     String    @db.Text
+  photoMediaId String?  @db.Uuid
+  isPublished Boolean   @default(false)
+  source      ContentSource @default(PLACEHOLDER)
+  sortOrder   Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  photo MediaAsset? @relation(fields: [photoMediaId], references: [id])
+
+  @@map("testimonials")
+}
+
+// ─────────────────────────────────────────────
+// Blog
+// ─────────────────────────────────────────────
+
+model Category {
+  id          String   @id @default(uuid()) @db.Uuid
+  slug        String   @unique
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  posts PostCategory[]
+
+  @@map("categories")
+}
+
+model Tag {
+  id        String   @id @default(uuid()) @db.Uuid
+  slug      String   @unique
+  name      String
+  createdAt DateTime @default(now())
+
+  posts PostTag[]
+
+  @@map("tags")
+}
+
+model Post {
+  id             String     @id @default(uuid()) @db.Uuid
+  slug           String
+  locale         String     @default("pt-BR")
+  title          String
+  excerpt        String?
+  bodyMd         String     @db.Text
+  bodyHtml       String?    @db.Text
+  coverMediaId   String?    @db.Uuid
+  status         PostStatus @default(DRAFT)
+  authorId       String?    @db.Uuid
+  publishedAt    DateTime?
+  scheduledAt    DateTime?
+  seoTitle       String?
+  seoDescription String?
+  allowComments  Boolean    @default(false)
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+  deletedAt      DateTime?
+
+  author   User?          @relation("PostAuthor", fields: [authorId], references: [id], onDelete: SetNull)
+  cover    MediaAsset?    @relation(fields: [coverMediaId], references: [id])
+  categories PostCategory[]
+  tags     PostTag[]
+  comments Comment[]
+
+  @@unique([slug, locale])
+  @@index([status, publishedAt])
+  @@map("posts")
+}
+
+model PostCategory {
+  postId     String @db.Uuid
+  categoryId String @db.Uuid
+
+  post     Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@id([postId, categoryId])
+  @@map("post_categories")
+}
+
+model PostTag {
+  postId String @db.Uuid
+  tagId  String @db.Uuid
+
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  tag  Tag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([postId, tagId])
+  @@map("post_tags")
+}
+
+model Comment {
+  id          String   @id @default(uuid()) @db.Uuid
+  postId      String   @db.Uuid
+  authorName  String
+  authorEmail String
+  content     String   @db.Text
+  isApproved  Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  deletedAt   DateTime?
+
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@index([postId, isApproved])
+  @@map("comments")
+}
+
+// ─────────────────────────────────────────────
+// Media / Gallery
+// ─────────────────────────────────────────────
+
+model MediaAsset {
+  id           String          @id @default(uuid()) @db.Uuid
+  bucket       String
+  objectKey    String
+  url          String?
+  filename     String
+  mimeType     String
+  sizeBytes    Int
+  width        Int?
+  height       Int?
+  type         MediaType       @default(OTHER)
+  visibility   MediaVisibility @default(PRIVATE)
+  altText      String?
+  title        String?
+  checksum     String?
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+  deletedAt    DateTime?
+
+  albums              AlbumMedia[]
+  pageCovers          Page[]
+  serviceCovers       Service[]          @relation("ServiceCover")
+  serviceIcons        Service[]          @relation("ServiceIcon")
+  serviceGallery      ServiceMedia[]
+  projectCovers       Project[]
+  partnerLogos        Partner[]
+  teamPhotos          TeamMember[]
+  testimonialPhotos   Testimonial[]
+  postCovers          Post[]
+  userAvatars         User[]             @relation("UserAvatar")
+  transparencyDocs    TransparencyDocument[]
+  applicationFiles    ApplicationFile[]
+  receipts            Receipt[]
+  videosAsThumb       Video[]
+
+  @@unique([bucket, objectKey])
+  @@index([type, visibility])
+  @@map("media_assets")
+}
+
+model Album {
+  id          String   @id @default(uuid()) @db.Uuid
+  slug        String   @unique
+  title       String
+  description String?
+  coverMediaId String? @db.Uuid
+  isPublished Boolean  @default(false)
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  deletedAt   DateTime?
+
+  media AlbumMedia[]
+
+  @@map("albums")
+}
+
+model AlbumMedia {
+  albumId   String @db.Uuid
+  mediaId   String @db.Uuid
+  sortOrder Int    @default(0)
+  caption   String?
+
+  album Album      @relation(fields: [albumId], references: [id], onDelete: Cascade)
+  media MediaAsset @relation(fields: [mediaId], references: [id], onDelete: Cascade)
+
+  @@id([albumId, mediaId])
+  @@map("album_media")
+}
+
+model Video {
+  id           String   @id @default(uuid()) @db.Uuid
+  youtubeId    String   @unique
+  title        String
+  description  String?
+  thumbMediaId String?  @db.Uuid
+  sortOrder    Int      @default(0)
+  isPublished  Boolean  @default(true)
+  source       ContentSource @default(OFFICIAL)
+  publishedAt  DateTime?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  thumb MediaAsset? @relation(fields: [thumbMediaId], references: [id])
+
+  @@map("videos")
+}
+
+// ─────────────────────────────────────────────
+// Transparency
+// ─────────────────────────────────────────────
+
+model TransparencyYear {
+  id          String   @id @default(uuid()) @db.Uuid
+  year        Int      @unique
+  title       String?
+  isPublished Boolean  @default(true)
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  documents TransparencyDocument[]
+  summaries FinancialSummary[]
+
+  @@map("transparency_years")
+}
+
+model TransparencyDocument {
+  id            String              @id @default(uuid()) @db.Uuid
+  yearId        String              @db.Uuid
+  type          TransparencyDocType
+  title         String
+  description   String?             @db.Text
+  serviceId     String?             @db.Uuid
+  organ         String? // SEAS, SEMASC, FMS...
+  contractCode  String? // TF 011/2025
+  objectText    String?             @db.Text
+  fileId        String              @db.Uuid
+  sourceUrl     String? // URL original Wix se houver
+  isPublished   Boolean             @default(true)
+  publishedAt   DateTime?
+  sortOrder     Int                 @default(0)
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+  deletedAt     DateTime?
+
+  year    TransparencyYear @relation(fields: [yearId], references: [id], onDelete: Cascade)
+  service Service?         @relation(fields: [serviceId], references: [id], onDelete: SetNull)
+  file    MediaAsset       @relation(fields: [fileId], references: [id])
+
+  @@index([yearId, type])
+  @@index([serviceId])
+  @@index([organ])
+  @@map("transparency_documents")
+}
+
+/// Agregados manuais para dashboard — NÃO inventar; preencher só com dados oficiais validados
+model FinancialSummary {
+  id           String   @id @default(uuid()) @db.Uuid
+  yearId       String   @db.Uuid
+  label        String
+  category     String // receita | despesa | doacao | projeto
+  amountCents  BigInt?
+  currency     String   @default("BRL")
+  notes        String?
+  source       ContentSource @default(PLACEHOLDER)
+  isPublished  Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  year TransparencyYear @relation(fields: [yearId], references: [id], onDelete: Cascade)
+
+  @@index([yearId, category])
+  @@map("financial_summaries")
+}
+
+// ─────────────────────────────────────────────
+// Fundraising
+// ─────────────────────────────────────────────
+
+model Campaign {
+  id              String         @id @default(uuid()) @db.Uuid
+  slug            String         @unique
+  title           String
+  description     String?        @db.Text
+  goalCents       BigInt?
+  raisedCents     BigInt         @default(0)
+  currency        String         @default("BRL")
+  status          CampaignStatus @default(DRAFT)
+  startsAt        DateTime?
+  endsAt          DateTime?
+  coverMediaId    String?        @db.Uuid
+  isPublished     Boolean        @default(false)
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  deletedAt       DateTime?
+
+  donations Donation[]
+
+  @@index([status, isPublished])
+  @@map("campaigns")
+}
+
+model Donation {
+  id                String          @id @default(uuid()) @db.Uuid
+  publicCode        String          @unique @default(uuid())
+  type              DonationType    @default(ONE_TIME)
+  status            DonationStatus  @default(PENDING)
+  provider          PaymentProvider
+  amountCents       BigInt
+  currency          String          @default("BRL")
+  donorName         String
+  donorEmail        String
+  donorDocument     String?
+  donorPhone        String?
+  donorUserId       String?         @db.Uuid
+  campaignId        String?         @db.Uuid
+  message           String?
+  providerPaymentId String?
+  providerPayload   Json?
+  idempotencyKey    String?         @unique
+  paidAt            DateTime?
+  expiresAt         DateTime?
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+
+  donorUser User?     @relation("DonorUser", fields: [donorUserId], references: [id], onDelete: SetNull)
+  campaign  Campaign? @relation(fields: [campaignId], references: [id], onDelete: SetNull)
+  receipt   Receipt?
+  events    DonationProviderEvent[]
+
+  @@index([status, createdAt])
+  @@index([donorEmail])
+  @@index([provider, providerPaymentId])
+  @@map("donations")
+}
+
+model DonationProviderEvent {
+  id         String   @id @default(uuid()) @db.Uuid
+  donationId String?  @db.Uuid
+  provider   PaymentProvider
+  eventId    String
+  eventType  String
+  payload    Json
+  processedAt DateTime?
+  createdAt  DateTime @default(now())
+
+  donation Donation? @relation(fields: [donationId], references: [id], onDelete: SetNull)
+
+  @@unique([provider, eventId])
+  @@index([donationId])
+  @@map("donation_provider_events")
+}
+
+model Receipt {
+  id          String   @id @default(uuid()) @db.Uuid
+  donationId  String   @unique @db.Uuid
+  number      String   @unique
+  issuedAt    DateTime @default(now())
+  fileId      String?  @db.Uuid
+  userId      String?  @db.Uuid
+  metadata    Json?
+  createdAt   DateTime @default(now())
+
+  donation Donation    @relation(fields: [donationId], references: [id], onDelete: Cascade)
+  file     MediaAsset? @relation(fields: [fileId], references: [id])
+  user     User?       @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@map("receipts")
+}
+
+model DonationAccount {
+  id          String   @id @default(uuid()) @db.Uuid
+  label       String?
+  bankName    String? // null até confirmação institucional
+  agency      String
+  account     String
+  accountType String?  @default("conta corrente")
+  pixKeyType  String // CNPJ | email | phone | random
+  pixKey      String
+  qrMediaId   String?
+  isActive    Boolean  @default(true)
+  sortOrder   Int      @default(0)
+  source      ContentSource @default(OFFICIAL)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("donation_accounts")
+}
+
+// ─────────────────────────────────────────────
+// Engagement
+// ─────────────────────────────────────────────
+
+model VolunteerApplication {
+  id              String            @id @default(uuid()) @db.Uuid
+  userId          String?           @unique @db.Uuid
+  name            String
+  email           String
+  phone           String?
+  document        String?
+  birthDate       DateTime?
+  address         String?
+  city            String?
+  state           String?
+  interestAreas   String[]          @default([])
+  availability    String?
+  message         String?           @db.Text
+  status          ApplicationStatus @default(SUBMITTED)
+  resumeMediaId   String?
+  notesInternal   String?           @db.Text
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  user  User?             @relation(fields: [userId], references: [id], onDelete: SetNull)
+  files ApplicationFile[] @relation("VolunteerFiles")
+
+  @@index([status, createdAt])
+  @@index([email])
+  @@map("volunteer_applications")
+}
+
+model FosterFamilyApplication {
+  id            String            @id @default(uuid()) @db.Uuid
+  name          String
+  email         String
+  phone         String?
+  document      String?
+  address       String?
+  city          String            @default("Manaus")
+  state         String            @default("AM")
+  yearsInCity   Int?
+  householdInfo String?           @db.Text
+  message       String?           @db.Text
+  status        ApplicationStatus @default(SUBMITTED)
+  notesInternal String?           @db.Text
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+
+  files ApplicationFile[] @relation("FosterFiles")
+
+  @@index([status, createdAt])
+  @@map("foster_family_applications")
+}
+
+model ApplicationFile {
+  id            String  @id @default(uuid()) @db.Uuid
+  volunteerId   String? @db.Uuid
+  fosterId      String? @db.Uuid
+  mediaId       String  @db.Uuid
+  label         String?
+
+  volunteer VolunteerApplication?    @relation("VolunteerFiles", fields: [volunteerId], references: [id], onDelete: Cascade)
+  foster    FosterFamilyApplication? @relation("FosterFiles", fields: [fosterId], references: [id], onDelete: Cascade)
+  media     MediaAsset               @relation(fields: [mediaId], references: [id])
+
+  @@index([volunteerId])
+  @@index([fosterId])
+  @@map("application_files")
+}
+
+model ContactMessage {
+  id          String    @id @default(uuid()) @db.Uuid
+  name        String
+  email       String
+  phone       String?
+  subject     String?
+  message     String    @db.Text
+  ipHash      String?
+  consentAt   DateTime?
+  handledAt   DateTime?
+  handledById String?   @db.Uuid
+  createdAt   DateTime  @default(now())
+
+  handledBy User? @relation("HandledBy", fields: [handledById], references: [id], onDelete: SetNull)
+
+  @@index([createdAt])
+  @@map("contact_messages")
+}
+
+model Notification {
+  id        String              @id @default(uuid()) @db.Uuid
+  userId    String?             @db.Uuid
+  channel   NotificationChannel @default(IN_APP)
+  status    NotificationStatus  @default(PENDING)
+  title     String
+  body      String              @db.Text
+  metadata  Json?
+  sentAt    DateTime?
+  readAt    DateTime?
+  createdAt DateTime            @default(now())
+
+  user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, status])
+  @@map("notifications")
+}
+
+// ─────────────────────────────────────────────
+// Consent (LGPD)
+// ─────────────────────────────────────────────
+
+model ConsentRecord {
+  id          String   @id @default(uuid()) @db.Uuid
+  email       String?
+  formType    String // contact | volunteer | donation | foster
+  policyVersion String
+  ipHash      String?
+  userAgent   String?
+  granted     Boolean  @default(true)
+  createdAt   DateTime @default(now())
+
+  @@index([email, formType])
+  @@map("consent_records")
+}

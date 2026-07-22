@@ -1,0 +1,42 @@
+{
+  "strategy": "Preserve public URLs with 301 redirects when slugs improve for IA/SEO. Keep dual routes for critical paths.",
+  "mapping": [
+    { "old": "/", "new": "/", "status": "keep" },
+    { "old": "/sobre", "new": "/sobre", "status": "keep", "aliases": ["/quem-somos"] },
+    { "old": "/nossa-historia", "new": "/nossa-historia", "status": "keep" },
+    { "old": "/familia-acolhedora", "new": "/familia-acolhedora", "status": "keep", "also": "/servicos/familia-acolhedora" },
+    { "old": "/adocao", "new": "/adocao", "status": "keep" },
+    { "old": "/doacao", "new": "/doacao", "status": "keep", "aliases": ["/doar"] },
+    { "old": "/contato", "new": "/contato", "status": "keep" },
+    { "old": "/videos", "new": "/videos", "status": "keep", "also": "/galeria/videos" },
+    { "old": "/portaldatransparencia", "new": "/transparencia", "status": "redirect_301", "keep_alias": true },
+    { "old": "/transparencia2017", "new": "/transparencia/2017", "status": "redirect_301" },
+    { "old": "/transparencia2018", "new": "/transparencia/2018", "status": "redirect_301" },
+    { "old": "/transparencia2019", "new": "/transparencia/2019", "status": "redirect_301" },
+    { "old": "/transparencia2020", "new": "/transparencia/2020", "status": "redirect_301" },
+    { "old": "/transparencia2021", "new": "/transparencia/2021", "status": "redirect_301" },
+    { "old": "/transparencia2022", "new": "/transparencia/2022", "status": "redirect_301" },
+    { "old": "/transparencia2023", "new": "/transparencia/2023", "status": "redirect_301" },
+    { "old": "/transparencia2024", "new": "/transparencia/2024", "status": "redirect_301" },
+    { "old": "/2025", "new": "/transparencia/2025", "status": "redirect_301" },
+    { "old": "/2026", "new": "/transparencia/2026", "status": "redirect_301" },
+    { "old": "/relatoriodeatividades", "new": "/transparencia/relatorios", "status": "redirect_301" },
+    { "old": "/balancoanual", "new": "/transparencia/balancos", "status": "redirect_301" },
+    { "old": "/inquiry-services-page", "new": "/servicos", "status": "optional_redirect", "note": "Página Wix de booking vazia" }
+  ],
+  "new_routes_not_in_old_site": [
+    "/servicos",
+    "/servicos/[slug]",
+    "/projetos",
+    "/galeria",
+    "/blog",
+    "/blog/[slug]",
+    "/voluntario",
+    "/padrinho",
+    "/padrinho/login",
+    "/padrinho/dashboard",
+    "/admin",
+    "/privacidade",
+    "/termos"
+  ]
+}

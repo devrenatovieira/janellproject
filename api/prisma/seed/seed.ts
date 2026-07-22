@@ -1,3 +1,6 @@
+// @ts-nocheck
+// Seed runs via `prisma db seed` only — not part of the Vercel serverless bundle.
+// Requires: npx prisma generate && npx prisma db seed
 import {
   ContentSource,
   MediaType,

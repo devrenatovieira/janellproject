@@ -6,10 +6,14 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { NestFactory } from '@nestjs/core';
 import { ExpressAdapter } from '@nestjs/platform-express';
 import { ValidationPipe } from '@nestjs/common';
-import express from 'express';
+import express, { type Request, type Response } from 'express';
 import { AppModule } from '../src/app.module';
 
 const expressApp = express();
+// Body parser for Vercel serverless
+expressApp.use(express.json({ limit: '2mb' }));
+expressApp.use(express.urlencoded({ extended: true }));
+
 let bootstrapped: Promise<void> | null = null;
 
 async function bootstrap() {
@@ -55,6 +59,8 @@ function ensureBoot() {
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   await ensureBoot();
   return new Promise<void>((resolve) => {
-    expressApp(req as never, res as never, () => resolve());
+    expressApp(req as unknown as Request, res as unknown as Response, () =>
+      resolve(),
+    );
   });
 }

@@ -7,3 +7,6 @@ dist/
 *.tsbuildinfo
 .DS_Store
 coverage/
+
+# Extensão Fluig/VS Code guarda credenciais aqui
+.vscode/servers.json
